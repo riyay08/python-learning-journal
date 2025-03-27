@@ -1,0 +1,95 @@
+from gpiozero import RGBLED, LED, Servo
+from time import sleep
+
+# Assigning GPIO pins for two RGB LEDs
+left_eye_status = RGBLED(red=17, green=27, blue=22)
+right_eye_status = RGBLED(red=5, green=6, blue=13)
+
+# Assigning GPIO pins for traffic light LEDs
+red_led = LED(3)
+yellow_led = LED(4)
+green_led = LED(2)
+
+# Assigning GPIO pin for servo motor
+servo = Servo(14)
+max
+
+eyes_RGBLEDs = {'red_RGBLED': 0.1, 'green_RGBLED': 0.5, 'blue_RGBLED': 0.99}
+
+debug_messages = True
+
+def stop_light(traffic):
+    """
+    Controls the traffic light LEDs based on input values.
+    """
+    if debug_messages:
+        print("Running stop_light function")
+        print(traffic)
+   
+    red_led.value = traffic['red_LED']
+    yellow_led.value = traffic['yellow_LED']
+    green_led.value = traffic['green_LED']
+   
+    if debug_messages:
+        print(f"Red: {traffic['red_LED']}, Yellow: {traffic['yellow_LED']}, Green: {traffic['green_LED']}")
+
+def eyes_RGB(left_eye_status, right_eye_status):
+    """
+    Sets the RGB LEDs for both eyes based on the provided dictionary values.
+    """
+    if debug_messages:
+        print("Setting Left Eye RGB LED to:", left_eye_status)
+        print("Setting Right Eye RGB LED to:", right_eye_status)
+   
+    left_eye_led.color = (left_eye_status['red_RGBLED'], left_eye_status['green_RGBLED'], left_eye_status['blue_RGBLED'])
+    right_eye_led.color = (right_eye_status['red_RGBLED'], right_eye_status['green_RGBLED'], right_eye_status['blue_RGBLED'])
+    sleep(1)
+
+def test_servo():
+    """
+    Test function to move the servo motor 45 degrees up and down.
+    """
+    print("Testing Servo Motor...")
+    servo.value = 0.5  # Move servo to +45 degrees
+    sleep(1)
+    servo.value = -0.5  # Move servo to -45 degrees
+    sleep(1)
+    servo.value = 0  # Return to center position
+    print("Servo Test Completed")
+    servo.detach()
+
+def test_stop_light():
+    """
+    Test function to cycle through traffic light LEDs.
+    """
+    print("Testing Traffic Light LEDs... Cycling through states")
+    stop_light({'red_LED': 1, 'yellow_LED': 0, 'green_LED': 0})  # Red on
+    sleep(2)
+    stop_light({'red_LED': 0, 'yellow_LED': 1, 'green_LED': 0})  # Yellow on
+    sleep(2)
+    stop_light({'red_LED': 0, 'yellow_LED': 0, 'green_LED': 1})  # Green on
+    sleep(2)
+    stop_light({'red_LED': 0, 'yellow_LED': 0, 'green_LED': 0})  # All off
+    print("Traffic Light Test Completed")
+
+def main():
+    """
+    Main function to control RGB LEDs, traffic lights, and servo motor based on user input.
+    """
+    while True:
+        user_input = input("Enter 'test' to test RGB LEDs, 'traffic' to test traffic lights, 'servo' to test the servo motor, or 'exit' to quit: ").strip().lower()
+       
+        if user_input == 'test':
+            eyes_RGB()
+        elif user_input == 'traffic':
+            test_stop_light()
+        elif user_input == 'servo':
+            test_servo()
+        elif user_input == 'exit':
+            print("Exiting program.")
+            break
+        else:
+            print("Invalid option. Try again.")
+
+if __name__ == "__main__":
+    main()
